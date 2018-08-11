@@ -1,0 +1,23 @@
+{
+  "reportRequests": [
+    {
+      "viewId": "ga:xxxxxxxx",
+      "dateRanges": [
+        {
+          "startDate": "2018-08-01",
+          "endDate": "2018-08-02"
+        }
+      ],
+      "dimensions": [
+        {
+          "name": "ga:deviceCategory"
+        }
+      ],
+      "metrics": [
+        {
+          "expression": "ga:sessions"
+        }
+      ]
+    }
+  ]
+}
