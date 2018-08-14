@@ -1,4 +1,5 @@
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
 pub struct ReportResponse {
     pub reports: Vec<Report>,
 }
@@ -8,12 +9,13 @@ pub struct ReportResponse {
 pub struct Report {
     pub column_header: ColumnHeader,
     pub data: ReportData,
+    pub next_page_token: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ColumnHeader {
-    pub dimensions: Vec<String>,
+    pub dimensions: Option<Vec<String>>,
     pub metric_header: MetricHeader,
 }
 
@@ -45,11 +47,11 @@ pub enum MetricType {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ReportData {
-    pub rows: Vec<ReportRow>,
-    pub totals: Vec<DateRangeValues>,
-    pub row_count: u32,
-    pub minimums: Vec<DateRangeValues>,
-    pub maximums: Vec<DateRangeValues>,
+    pub rows: Option<Vec<ReportRow>>,
+    pub totals: Vec<DateRangeValue>,
+    pub row_count: Option<u32>,
+    pub minimums: Option<Vec<DateRangeValue>>,
+    pub maximums: Option<Vec<DateRangeValue>>,
     pub samples_read_counts: Option<Vec<String>>,
     pub sampling_space_sizes: Option<Vec<String>>,
     pub is_data_golden: bool,
@@ -57,12 +59,12 @@ pub struct ReportData {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ReportRow {
-    pub dimensions: Vec<String>,
-    pub metrics: Vec<DateRangeValues>,
+    pub dimensions: Option<Vec<String>>,
+    pub metrics: Vec<DateRangeValue>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct DateRangeValues {
+pub struct DateRangeValue {
     pub values: Vec<String>,
     // pivotValueRegions: Vec<PivotValueRegion>,
 }

@@ -1,6 +1,6 @@
+extern crate ga_v4_flattener;
 extern crate serde;
 extern crate serde_json;
-extern crate ga_v4_flattener;
 
 use ga_v4_flattener::types::ReportResponse;
 
@@ -75,7 +75,7 @@ fn main() {
     }
   ]
 }"#;
-    
+
     let result: ReportResponse = serde_json::from_str(data).unwrap();
 
     println!("{:?}", result.reports[0]);
