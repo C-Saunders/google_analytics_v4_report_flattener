@@ -512,8 +512,136 @@ mod tests {
   ]
 }"#;
         assert_eq!(
+            to_delimited(data, "|delimiter|").unwrap(),
+            r#""ga:deviceCategory"|delimiter|"ga:sessions"
+"desktop"|delimiter|43
+"mobile"|delimiter|1
+"#.to_string()
+        )
+    }
+
+    #[test]
+    fn multiple_dimensions_and_metrics() {
+        let data = r#"{
+  "reports": [
+    {
+      "columnHeader": {
+        "dimensions": [
+          "ga:deviceCategory",
+          "ga:country"
+        ],
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ga:bounces",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      },
+      "data": {
+        "rows": [
+          {
+            "dimensions": [
+              "desktop",
+              "Australia"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "desktop",
+              "France"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "39",
+                  "21"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "desktop",
+              "United States"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "3",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "mobile",
+              "Brazil"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "0"
+                ]
+              }
+            ]
+          }
+        ],
+        "totals": [
+          {
+            "values": [
+              "44",
+              "23"
+            ]
+          }
+        ],
+        "rowCount": 4,
+        "minimums": [
+          {
+            "values": [
+              "1",
+              "0"
+            ]
+          }
+        ],
+        "maximums": [
+          {
+            "values": [
+              "39",
+              "21"
+            ]
+          }
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}
+"#;
+
+        assert_eq!(
             to_delimited(data, ",").unwrap(),
-            "\"ga:deviceCategory\",\"ga:sessions\"\n\"desktop\",43\n\"mobile\",1\n".to_string()
+            r#""ga:deviceCategory","ga:country","ga:sessions","ga:bounces"
+"desktop","Australia",1,1
+"desktop","France",39,21
+"desktop","United States",3,1
+"mobile","Brazil",1,0
+"#.to_string()
         )
     }
 }
