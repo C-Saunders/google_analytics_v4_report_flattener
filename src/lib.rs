@@ -4,15 +4,18 @@ extern crate serde_json;
 
 #[macro_use]
 extern crate failure;
+#[cfg(test)]
+#[macro_use]
+extern crate indoc;
 #[macro_use]
 extern crate serde_derive;
 
-pub mod types;
 mod report_to_flat;
+pub mod types;
 
 use failure::Error;
-use types::{Report, ReportResponse};
 use report_to_flat::get_flattened;
+use types::{Report, ReportResponse};
 
 pub fn to_delimited(raw_report: &String, delimiter: &str) -> Result<String, Error> {
     let empty_response = Ok("".to_string());
@@ -104,10 +107,12 @@ mod tests {
 
         assert_eq!(
             to_delimited(&data, "|delimiter|").unwrap(),
-            r#""ga:deviceCategory"|delimiter|"ga:sessions"
-"desktop"|delimiter|43
-"mobile"|delimiter|1
-"#.to_string()
+            indoc!(
+                r#""ga:deviceCategory"|delimiter|"ga:sessions"
+                "desktop"|delimiter|43
+                "mobile"|delimiter|1
+                "#
+            ).to_string()
         )
     }
 
@@ -121,12 +126,14 @@ mod tests {
 
         assert_eq!(
             to_delimited(&data, ",").unwrap(),
-            r#""ga:deviceCategory","ga:country","ga:sessions","ga:bounces"
-"desktop","Australia",1,1
-"desktop","France",39,21
-"desktop","United States",3,1
-"mobile","Brazil",1,0
-"#.to_string()
+            indoc!(
+                r#""ga:deviceCategory","ga:country","ga:sessions","ga:bounces"
+                "desktop","Australia",1,1
+                "desktop","France",39,21
+                "desktop","United States",3,1
+                "mobile","Brazil",1,0
+                "#
+            ).to_string()
         )
     }
 }
