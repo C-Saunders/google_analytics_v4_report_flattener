@@ -17,7 +17,7 @@ use failure::Error;
 use report_to_flat::report_to_flat;
 use types::{Report, ReportResponse};
 
-pub fn to_delimited(raw_report: &String, delimiter: &str) -> Result<String, Error> {
+pub fn to_delimited(raw_report: &str, delimiter: &str) -> Result<String, Error> {
     let empty_response = Ok("".to_string());
 
     if raw_report.is_empty() {
