@@ -1,0 +1,110 @@
+{
+  "reports": [
+    {
+      "columnHeader": {
+        "dimensions": [
+          "ga:deviceCategory",
+          "ga:country"
+        ],
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ga:bounces",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      },
+      "data": {
+        "rows": [
+          {
+            "dimensions": [
+              "desktop",
+              "Australia"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "desktop",
+              "France"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "39",
+                  "21"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "desktop",
+              "United States"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "3",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "mobile",
+              "Brazil"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "0"
+                ]
+              }
+            ]
+          }
+        ],
+        "totals": [
+          {
+            "values": [
+              "44",
+              "23"
+            ]
+          }
+        ],
+        "rowCount": 4,
+        "minimums": [
+          {
+            "values": [
+              "1",
+              "0"
+            ]
+          }
+        ],
+        "maximums": [
+          {
+            "values": [
+              "39",
+              "21"
+            ]
+          }
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "reports": [
+    {
+      "columnHeader": {
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      },
+      "data": {
+        "rows": [
+          {
+            "metrics": [
+              {
+                "values": [
+                  "44"
+                ]
+              }
+            ]
+          }
+        ],
+        "totals": [
+          {
+            "values": [
+              "44"
+            ]
+          }
+        ],
+        "rowCount": 1,
+        "minimums": [
+          {
+            "values": [
+              "44"
+            ]
+          }
+        ],
+        "maximums": [
+          {
+            "values": [
+              "44"
+            ]
+          }
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}

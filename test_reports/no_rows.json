@@ -1,0 +1,29 @@
+{
+  "reports": [
+    {
+      "columnHeader": {
+        "dimensions": [
+          "ga:deviceCategory"
+        ],
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      },
+      "data": {
+        "totals": [
+          {
+            "values": [
+              "0"
+            ]
+          }
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}

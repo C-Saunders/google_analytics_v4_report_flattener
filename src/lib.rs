@@ -13,7 +13,7 @@ use failure::Error;
 use joinery::Joinable;
 use types::*;
 
-pub fn to_delimited(raw_report: &str, delimiter: &str) -> Result<String, Error> {
+pub fn to_delimited(raw_report: &String, delimiter: &str) -> Result<String, Error> {
     let empty_response = Ok("".to_string());
 
     if raw_report.is_empty() {
@@ -86,433 +86,71 @@ fn get_flattened(report: &Report, delimiter: &str) -> Result<String, Error> {
 #[cfg(test)]
 mod tests {
     use super::to_delimited;
+    use std::fs;
+    use std::path::PathBuf;
 
     #[test]
     fn empty_raw_report() {
-        assert_eq!(to_delimited("", ",").unwrap(), "")
+        assert_eq!(to_delimited(&("".to_string()), ",").unwrap(), "")
     }
 
     #[test]
     fn rejects_reports_containing_unsupported_features() {
-        let data = r#"{
-  "reports": [
-    {
-      "columnHeader": {
-        "dimensions": [
-          "ga:deviceCategory"
-        ],
-        "metricHeader": {
-          "pivotHeaders": [
-            {
-              "pivotHeaderEntries": [
-                {
-                  "dimensionNames": [
-                    "ga:yearWeek"
-                  ],
-                  "dimensionValues": [
-                    "201831"
-                  ],
-                  "metric": {
-                    "name": "ga:sessions",
-                    "type": "INTEGER"
-                  }
-                }
-              ],
-              "totalPivotGroupsCount": 1
-            }
-          ]
-        }
-      },
-      "data": {
-        "rows": [
-          {
-            "dimensions": [
-              "desktop"
-            ],
-            "metrics": [
-              {
-                "pivotValueRegions": [
-                  {
-                    "values": [
-                      "43"
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "dimensions": [
-              "mobile"
-            ],
-            "metrics": [
-              {
-                "pivotValueRegions": [
-                  {
-                    "values": [
-                      "1"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "totals": [
-          {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "44"
-                ]
-              }
-            ]
-          }
-        ],
-        "rowCount": 2,
-        "minimums": [
-          {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "1"
-                ]
-              }
-            ]
-          }
-        ],
-        "maximums": [
-          {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "43"
-                ]
-              }
-            ]
-          }
-        ],
-        "isDataGolden": true
-      }
-    }
-  ]
-}
-"#;
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/unsupported_feature.json"
+        ))).unwrap();
 
-        assert!(to_delimited(data, ",").is_err())
+        assert!(to_delimited(&data, ",").is_err())
     }
 
     #[test]
     fn rejects_multiple_reports() {
-        let data = r#"{
-  "reports": [
-    {
-      "columnHeader": {
-        "dimensions": [
-          "ga:deviceCategory"
-        ],
-        "metricHeader": {
-          "metricHeaderEntries": [
-            {
-              "name": "ga:sessions",
-              "type": "INTEGER"
-            }
-          ]
-        }
-      },
-      "data": {
-        "rows": [
-          {
-            "dimensions": [
-              "desktop"
-            ],
-            "metrics": [
-              {
-                "values": [
-                  "43"
-                ]
-              }
-            ]
-          },
-          {
-            "dimensions": [
-              "mobile"
-            ],
-            "metrics": [
-              {
-                "values": [
-                  "1"
-                ]
-              }
-            ]
-          }
-        ],
-        "totals": [
-          {
-            "values": [
-              "44"
-            ]
-          }
-        ],
-        "rowCount": 2,
-        "minimums": [
-          {
-            "values": [
-              "1"
-            ]
-          }
-        ],
-        "maximums": [
-          {
-            "values": [
-              "43"
-            ]
-          }
-        ],
-        "isDataGolden": true
-      }
-    },
-    {
-      "columnHeader": {
-        "dimensions": [
-          "ga:deviceCategory"
-        ],
-        "metricHeader": {
-          "pivotHeaders": [
-            {
-              "pivotHeaderEntries": [
-                {
-                  "dimensionNames": [
-                    "ga:yearWeek"
-                  ],
-                  "dimensionValues": [
-                    "201831"
-                  ],
-                  "metric": {
-                    "name": "ga:sessions",
-                    "type": "INTEGER"
-                  }
-                }
-              ],
-              "totalPivotGroupsCount": 1
-            }
-          ]
-        }
-      },
-      "data": {
-        "rows": [
-          {
-            "dimensions": [
-              "desktop"
-            ],
-            "metrics": [
-              {
-                "pivotValueRegions": [
-                  {
-                    "values": [
-                      "43"
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "dimensions": [
-              "mobile"
-            ],
-            "metrics": [
-              {
-                "pivotValueRegions": [
-                  {
-                    "values": [
-                      "1"
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "totals": [
-          {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "44"
-                ]
-              }
-            ]
-          }
-        ],
-        "rowCount": 2,
-        "minimums": [
-          {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "1"
-                ]
-              }
-            ]
-          }
-        ],
-        "maximums": [
-          {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "43"
-                ]
-              }
-            ]
-          }
-        ],
-        "isDataGolden": true
-      }
-    }
-  ]
-}
-"#;
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/multiple_reports.json"
+        ))).unwrap();
 
-        assert!(to_delimited(data, ",").is_err())
+        assert!(to_delimited(&data, ",").is_err())
     }
 
     #[test]
     fn no_rows() {
-        let data = r#"{
-  "reports": [
-    {
-      "columnHeader": {
-        "dimensions": [
-          "ga:deviceCategory"
-        ],
-        "metricHeader": {
-          "metricHeaderEntries": [
-            {
-              "name": "ga:sessions",
-              "type": "INTEGER"
-            }
-          ]
-        }
-      },
-      "data": {
-        "totals": [
-          {
-            "values": [
-              "0"
-            ]
-          }
-        ],
-        "isDataGolden": true
-      }
-    }
-  ]
-}
-"#;
-        assert_eq!(to_delimited(data, ",").unwrap(), "".to_string())
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/no_rows.json"
+        ))).unwrap();
+
+        assert_eq!(to_delimited(&data, ",").unwrap(), "".to_string())
     }
 
     #[test]
     fn no_dimensions() {
-        let data = r#"{
-  "reports": [
-    {
-      "columnHeader": {
-        "metricHeader": {
-          "metricHeaderEntries": [
-            {
-              "name": "ga:sessions",
-              "type": "INTEGER"
-            }
-          ]
-        }
-      },
-      "data": {
-        "rows": [
-          {
-            "metrics": [
-              {
-                "values": [
-                  "44"
-                ]
-              }
-            ]
-          }
-        ],
-        "totals": [
-          {
-            "values": [
-              "44"
-            ]
-          }
-        ],
-        "rowCount": 1,
-        "minimums": [
-          {
-            "values": [
-              "44"
-            ]
-          }
-        ],
-        "maximums": [
-          {
-            "values": [
-              "44"
-            ]
-          }
-        ],
-        "isDataGolden": true
-      }
-    }
-  ]
-}"#;
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/no_dimensions.json"
+        ))).unwrap();
+
         assert_eq!(
-            to_delimited(data, ",").unwrap(),
+            to_delimited(&data, ",").unwrap(),
             "\"ga:sessions\"\n44\n".to_string()
         )
     }
 
     #[test]
     fn single_dimension_and_metric() {
-        let data = r#"{
-  "reports": [
-    {
-      "columnHeader": {
-        "dimensions": [
-          "ga:deviceCategory"
-        ],
-        "metricHeader": {
-          "metricHeaderEntries": [
-            {
-              "name": "ga:sessions",
-              "type": "INTEGER"
-            }
-          ]
-        }
-      },
-      "data": {
-        "rows": [
-          {
-            "dimensions": ["desktop"],
-            "metrics": [{"values": ["43"]}]
-          },
-          {
-            "dimensions": ["mobile"],
-            "metrics": [{"values": ["1"]}]
-          }
-        ],
-        "totals": [{"values": ["44"]}],
-        "rowCount": 2,
-        "minimums": [{"values": ["1"]}],
-        "maximums": [{"values": ["43"]}],
-        "isDataGolden": true
-      }
-    }
-  ]
-}"#;
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/single_dimension_and_metric.json"
+        ))).unwrap();
+
         assert_eq!(
-            to_delimited(data, "|delimiter|").unwrap(),
+            to_delimited(&data, "|delimiter|").unwrap(),
             r#""ga:deviceCategory"|delimiter|"ga:sessions"
 "desktop"|delimiter|43
 "mobile"|delimiter|1
@@ -522,120 +160,14 @@ mod tests {
 
     #[test]
     fn multiple_dimensions_and_metrics() {
-        let data = r#"{
-  "reports": [
-    {
-      "columnHeader": {
-        "dimensions": [
-          "ga:deviceCategory",
-          "ga:country"
-        ],
-        "metricHeader": {
-          "metricHeaderEntries": [
-            {
-              "name": "ga:sessions",
-              "type": "INTEGER"
-            },
-            {
-              "name": "ga:bounces",
-              "type": "INTEGER"
-            }
-          ]
-        }
-      },
-      "data": {
-        "rows": [
-          {
-            "dimensions": [
-              "desktop",
-              "Australia"
-            ],
-            "metrics": [
-              {
-                "values": [
-                  "1",
-                  "1"
-                ]
-              }
-            ]
-          },
-          {
-            "dimensions": [
-              "desktop",
-              "France"
-            ],
-            "metrics": [
-              {
-                "values": [
-                  "39",
-                  "21"
-                ]
-              }
-            ]
-          },
-          {
-            "dimensions": [
-              "desktop",
-              "United States"
-            ],
-            "metrics": [
-              {
-                "values": [
-                  "3",
-                  "1"
-                ]
-              }
-            ]
-          },
-          {
-            "dimensions": [
-              "mobile",
-              "Brazil"
-            ],
-            "metrics": [
-              {
-                "values": [
-                  "1",
-                  "0"
-                ]
-              }
-            ]
-          }
-        ],
-        "totals": [
-          {
-            "values": [
-              "44",
-              "23"
-            ]
-          }
-        ],
-        "rowCount": 4,
-        "minimums": [
-          {
-            "values": [
-              "1",
-              "0"
-            ]
-          }
-        ],
-        "maximums": [
-          {
-            "values": [
-              "39",
-              "21"
-            ]
-          }
-        ],
-        "isDataGolden": true
-      }
-    }
-  ]
-}
-"#;
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/multiple_dimensions_and_metrics.json"
+        ))).unwrap();
 
         assert_eq!(
-            to_delimited(data, ",").unwrap(),
+            to_delimited(&data, ",").unwrap(),
             r#""ga:deviceCategory","ga:country","ga:sessions","ga:bounces"
 "desktop","Australia",1,1
 "desktop","France",39,21
