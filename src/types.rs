@@ -1,3 +1,5 @@
+use std::slice::Iter;
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct ReportResponse {
@@ -10,6 +12,19 @@ pub struct Report {
     pub column_header: ColumnHeader,
     pub data: ReportData,
     pub next_page_token: Option<String>,
+}
+
+impl Report {
+    pub fn is_empty(&self) -> bool {
+        self.data.rows.is_none()
+    }
+
+    pub fn get_metric_header_iterator(&self) -> Iter<MetricHeaderEntry> {
+        self.column_header
+            .metric_header
+            .metric_header_entries
+            .iter()
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug)]

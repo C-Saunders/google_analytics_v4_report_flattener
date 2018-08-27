@@ -5,15 +5,12 @@ pub fn report_to_flat(report: &Report, delimiter: &str) -> String {
     let empty_vec = Vec::with_capacity(0);
     let dimension_header_iter = report.column_header.dimensions
         .as_ref()
-        .unwrap_or(&empty_vec) // TODO; this is pretty ugly
+        .unwrap_or(&empty_vec) // TODO: this is pretty ugly
         .iter()
         .map(|entry| format!("\"{}\"", entry));
 
     let metric_header_iter = report
-        .column_header
-        .metric_header
-        .metric_header_entries
-        .iter()
+        .get_metric_header_iterator()
         .map(|entry: &MetricHeaderEntry| format!("\"{}\"", &entry.name));
 
     let mut result = format!(
@@ -52,9 +49,9 @@ pub fn report_to_flat(report: &Report, delimiter: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::report_to_flat;
+    use serde_json;
     use std::fs;
     use std::path::PathBuf;
-    use serde_json;
     use types::ReportResponse;
 
     #[test]
@@ -65,10 +62,10 @@ mod tests {
             "/test_reports/no_dimensions.json"
         ))).unwrap();
 
-        let parsed_report: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
         assert_eq!(
-            report_to_flat(&parsed_report.reports[0], ","),
+            report_to_flat(&deserialized_response.reports[0], ","),
             "\"ga:sessions\"\n44\n".to_string()
         )
     }
@@ -81,10 +78,10 @@ mod tests {
             "/test_reports/single_dimension_and_metric.json"
         ))).unwrap();
 
-        let parsed_report: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
         assert_eq!(
-            report_to_flat(&parsed_report.reports[0], "|delimiter|"),
+            report_to_flat(&deserialized_response.reports[0], "|delimiter|"),
             indoc!(
                 r#""ga:deviceCategory"|delimiter|"ga:sessions"
                 "desktop"|delimiter|43
@@ -102,10 +99,10 @@ mod tests {
             "/test_reports/multiple_dimensions_and_metrics.json"
         ))).unwrap();
 
-        let parsed_report: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
         assert_eq!(
-            report_to_flat(&parsed_report.reports[0], ","),
+            report_to_flat(&deserialized_response.reports[0], ","),
             indoc!(
                 r#""ga:deviceCategory","ga:country","ga:sessions","ga:bounces"
                 "desktop","Australia",1,1
@@ -115,5 +112,18 @@ mod tests {
                 "#
             ).to_string()
         )
+    }
+
+    #[test]
+    fn large_report() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/large_report.json"
+        ))).unwrap();
+
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert!(report_to_flat(&deserialized_response.reports[0], ",").len() > 0)
     }
 }
