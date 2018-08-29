@@ -1,7 +1,16 @@
 use joinery::Joinable;
 use types::*;
 
-pub fn report_to_flat(report: &Report, delimiter: &str) -> String {
+pub fn response_to_delimited_reports(response: &ReportResponse, delimiter: &str) -> Vec<String> {
+    let mut result: Vec<String> = Vec::with_capacity(response.reports.len());
+    for report in &response.reports {
+        result.push(report_to_flat(&report, delimiter));
+    }
+
+    result
+}
+
+fn report_to_flat(report: &Report, delimiter: &str) -> String {
     let empty_vec = Vec::with_capacity(0);
     let dimension_header_iter = report.column_header.dimensions
         .as_ref()
@@ -48,7 +57,7 @@ pub fn report_to_flat(report: &Report, delimiter: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::report_to_flat;
+    use super::*;
     use serde_json;
     use std::fs;
     use std::path::PathBuf;
@@ -125,5 +134,37 @@ mod tests {
         let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
         assert!(report_to_flat(&deserialized_response.reports[0], ",").len() > 0)
+    }
+
+    #[test]
+    fn multiple_reports() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/multiple_reports.json"
+        ))).unwrap();
+
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_delimited_reports(&deserialized_response, ","),
+            vec![
+                indoc!(
+                    r#""ga:deviceCategory","ga:sessions","ga:bounces"
+                "desktop",25,17
+                "mobile",2,2
+                "#
+                ).to_string(),
+                indoc!(
+                    r#""ga:country","ga:sessions","ga:bounces"
+                "Azerbaijan",1,0
+                "France",18,11
+                "Japan",4,4
+                "Switzerland",1,1
+                "United States",3,3
+                "#
+                ).to_string(),
+            ]
+        )
     }
 }

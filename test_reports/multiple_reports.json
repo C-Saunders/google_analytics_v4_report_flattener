@@ -10,6 +10,10 @@
             {
               "name": "ga:sessions",
               "type": "INTEGER"
+            },
+            {
+              "name": "ga:bounces",
+              "type": "INTEGER"
             }
           ]
         }
@@ -23,7 +27,8 @@
             "metrics": [
               {
                 "values": [
-                  "43"
+                  "25",
+                  "17"
                 ]
               }
             ]
@@ -35,7 +40,8 @@
             "metrics": [
               {
                 "values": [
-                  "1"
+                  "2",
+                  "2"
                 ]
               }
             ]
@@ -44,7 +50,8 @@
         "totals": [
           {
             "values": [
-              "44"
+              "27",
+              "19"
             ]
           }
         ],
@@ -52,14 +59,16 @@
         "minimums": [
           {
             "values": [
-              "1"
+              "2",
+              "2"
             ]
           }
         ],
         "maximums": [
           {
             "values": [
-              "43"
+              "25",
+              "17"
             ]
           }
         ],
@@ -69,26 +78,17 @@
     {
       "columnHeader": {
         "dimensions": [
-          "ga:deviceCategory"
+          "ga:country"
         ],
         "metricHeader": {
-          "pivotHeaders": [
+          "metricHeaderEntries": [
             {
-              "pivotHeaderEntries": [
-                {
-                  "dimensionNames": [
-                    "ga:yearWeek"
-                  ],
-                  "dimensionValues": [
-                    "201831"
-                  ],
-                  "metric": {
-                    "name": "ga:sessions",
-                    "type": "INTEGER"
-                  }
-                }
-              ],
-              "totalPivotGroupsCount": 1
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            },
+            {
+              "name": "ga:bounces",
+              "type": "INTEGER"
             }
           ]
         }
@@ -97,32 +97,65 @@
         "rows": [
           {
             "dimensions": [
-              "desktop"
+              "Azerbaijan"
             ],
             "metrics": [
               {
-                "pivotValueRegions": [
-                  {
-                    "values": [
-                      "43"
-                    ]
-                  }
+                "values": [
+                  "1",
+                  "0"
                 ]
               }
             ]
           },
           {
             "dimensions": [
-              "mobile"
+              "France"
             ],
             "metrics": [
               {
-                "pivotValueRegions": [
-                  {
-                    "values": [
-                      "1"
-                    ]
-                  }
+                "values": [
+                  "18",
+                  "11"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Japan"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "4",
+                  "4"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Switzerland"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1",
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "United States"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "3",
+                  "3"
                 ]
               }
             ]
@@ -130,35 +163,26 @@
         ],
         "totals": [
           {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "44"
-                ]
-              }
+            "values": [
+              "27",
+              "19"
             ]
           }
         ],
-        "rowCount": 2,
+        "rowCount": 5,
         "minimums": [
           {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "1"
-                ]
-              }
+            "values": [
+              "1",
+              "0"
             ]
           }
         ],
         "maximums": [
           {
-            "pivotValueRegions": [
-              {
-                "values": [
-                  "43"
-                ]
-              }
+            "values": [
+              "18",
+              "11"
             ]
           }
         ],

@@ -5,7 +5,6 @@ authors = ["Charlie Saunders <charlieasaunders@gmail.com>"]
 
 [dependencies]
 failure = "0.1.2"
-failure_derive = "0.1.2"
 indoc = "0.2"
 joinery = "1.0.0"
 serde = "1.0"

@@ -4,7 +4,7 @@ use types::*;
 
 pub fn response_to_row_array(response: &ReportResponse) -> Value {
     let mut result: Vec<Value> = Vec::with_capacity(response.reports.len());
-    for report in response.reports.iter() {
+    for report in &response.reports {
         result.push(report_to_row_array(&report));
     }
 
@@ -142,5 +142,52 @@ mod tests {
         let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
         assert!(response_to_row_array(&parsed_response).as_array().is_some())
+    }
+
+    #[test]
+    fn multiple_reports() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/multiple_reports.json"
+        ))).unwrap();
+
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_row_array(&deserialized_response),
+            json!([
+                [{
+                  "ga:deviceCategory": "desktop",
+                  "ga:sessions": "25",
+                  "ga:bounces": "17",
+                }, {
+                  "ga:deviceCategory": "mobile",
+                  "ga:sessions": "2",
+                  "ga:bounces": "2",
+                }],
+                [{
+                  "ga:country": "Azerbaijan",
+                  "ga:sessions": "1",
+                  "ga:bounces": "0",
+                }, {
+                  "ga:country": "France",
+                  "ga:sessions": "18",
+                  "ga:bounces": "11",
+                }, {
+                  "ga:country": "Japan",
+                  "ga:sessions": "4",
+                  "ga:bounces": "4",
+                }, {
+                  "ga:country": "Switzerland",
+                  "ga:sessions": "1",
+                  "ga:bounces": "1",
+                }, {
+                  "ga:country": "United States",
+                  "ga:sessions": "3",
+                  "ga:bounces": "3",
+                }]
+            ])
+        )
     }
 }
