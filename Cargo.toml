@@ -5,8 +5,10 @@ authors = ["Charlie Saunders <charlieasaunders@gmail.com>"]
 
 [dependencies]
 failure = "0.1.2"
-indoc = "0.2"
 joinery = "1.0.0"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
+
+[dev-dependencies]
+indoc = "0.2"
