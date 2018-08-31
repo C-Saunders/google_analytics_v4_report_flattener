@@ -2,12 +2,11 @@ use joinery::Joinable;
 use types::*;
 
 pub fn response_to_delimited_reports(response: &ReportResponse, delimiter: &str) -> Vec<String> {
-    let mut result: Vec<String> = Vec::with_capacity(response.reports.len());
-    for report in &response.reports {
-        result.push(report_to_flat(&report, delimiter));
-    }
-
-    result
+    response
+        .reports
+        .iter()
+        .map(|report| report_to_flat(&report, delimiter))
+        .collect()
 }
 
 fn report_to_flat(report: &Report, delimiter: &str) -> String {
@@ -30,7 +29,7 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
             .to_string()
     );
 
-    for report_row in report.data.rows.as_ref().unwrap().iter() {
+    report.data.rows.as_ref().unwrap().iter().for_each(|report_row| {
         if let Some(ref dimensions) = report_row.dimensions {
             result.push_str(
                 dimensions
@@ -50,7 +49,7 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
             .to_string();
 
         result.push_str(format!("{}\n", metric_data).as_str());
-    }
+    });
 
     result
 }

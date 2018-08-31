@@ -3,12 +3,11 @@ use serde_json::Map;
 use types::*;
 
 pub fn response_to_row_array(response: &ReportResponse) -> Value {
-    let mut result: Vec<Value> = Vec::with_capacity(response.reports.len());
-    for report in &response.reports {
-        result.push(report_to_row_array(&report));
-    }
-
-    Value::Array(result)
+    response
+        .reports
+        .iter()
+        .map(|report| report_to_row_array(&report))
+        .collect()
 }
 
 fn report_to_row_array(report: &Report) -> Value {
@@ -19,27 +18,31 @@ fn report_to_row_array(report: &Report) -> Value {
 
     let dimension_headers = report.column_header.dimensions.as_ref();
     let metric_header_iter = report.get_metric_header_iterator();
-    let mut result: Vec<Value> = Vec::with_capacity(report_rows.as_ref().unwrap().len());
 
-    for row in report_rows.as_ref().unwrap() {
-        let mut current: Map<String, Value> = Map::new();
+    let result = report_rows
+        .as_ref()
+        .unwrap()
+        .iter()
+        .map(|row| {
+            let mut current: Map<String, Value> = Map::new();
 
-        if dimension_headers.is_some() {
-            let dimension_data = row.dimensions.as_ref().unwrap();
-            for (i, header) in dimension_headers.unwrap().iter().enumerate() {
-                current.insert(
-                    header.to_string(),
-                    Value::String(dimension_data[i].to_string()),
-                );
+            if dimension_headers.is_some() {
+                let dimension_data = row.dimensions.as_ref().unwrap();
+                for (i, header) in dimension_headers.unwrap().iter().enumerate() {
+                    current.insert(
+                        header.to_string(),
+                        Value::String(dimension_data[i].to_string()),
+                    );
+                }
             }
-        }
 
-        for (header, value) in metric_header_iter.clone().zip(row.metrics[0].values.iter()) {
-            current.insert(header.name.to_string(), Value::String(value.to_string()));
-        }
+            for (header, value) in metric_header_iter.clone().zip(row.metrics[0].values.iter()) {
+                current.insert(header.name.to_string(), Value::String(value.to_string()));
+            }
 
-        result.push(Value::Object(current));
-    }
+            Value::Object(current)
+        })
+        .collect();
 
     Value::Array(result)
 }
