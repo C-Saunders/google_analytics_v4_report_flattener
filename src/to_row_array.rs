@@ -41,8 +41,7 @@ fn report_to_row_array(report: &Report) -> Value {
             }
 
             Value::Object(current)
-        })
-        .collect();
+        }).collect();
 
     Value::Array(result)
 }

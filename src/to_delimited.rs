@@ -29,27 +29,33 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
             .to_string()
     );
 
-    report.data.rows.as_ref().unwrap().iter().for_each(|report_row| {
-        if let Some(ref dimensions) = report_row.dimensions {
-            result.push_str(
-                dimensions
-                    .iter()
-                    .map(|entry| format!("\"{}\"", entry))
-                    .join_with(delimiter)
-                    .to_string()
-                    .as_str(),
-            );
-            result.push_str(delimiter);
-        };
-        let metric_data = report_row
-            .metrics
-            .iter()
-            .flat_map(|date_range_value| date_range_value.values.iter())
-            .join_with(delimiter)
-            .to_string();
+    report
+        .data
+        .rows
+        .as_ref()
+        .unwrap()
+        .iter()
+        .for_each(|report_row| {
+            if let Some(ref dimensions) = report_row.dimensions {
+                result.push_str(
+                    dimensions
+                        .iter()
+                        .map(|entry| format!("\"{}\"", entry))
+                        .join_with(delimiter)
+                        .to_string()
+                        .as_str(),
+                );
+                result.push_str(delimiter);
+            };
+            let metric_data = report_row
+                .metrics
+                .iter()
+                .flat_map(|date_range_value| date_range_value.values.iter())
+                .join_with(delimiter)
+                .to_string();
 
-        result.push_str(format!("{}\n", metric_data).as_str());
-    });
+            result.push_str(format!("{}\n", metric_data).as_str());
+        });
 
     result
 }
