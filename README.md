@@ -14,17 +14,17 @@ Converts a report response to an array of "flat JSON" responses.
 [
   [{
     "ga:deviceCategory": "desktop",
-    "ga:sessions": "21"
+    "ga:sessions": 21
   }, {
     "ga:deviceCategory": "mobile",
-    "ga:sessions": "84"
+    "ga:sessions": 84
   }],
   [{
     "ga:country": "Mexico",
-    "ga:bounces": "9213"
+    "ga:bounces": 9213
   }, {
     "ga:country": "Canada",
-    "ga:bounces": "407"
+    "ga:bounces": 407
   }]
 ]
 ```
