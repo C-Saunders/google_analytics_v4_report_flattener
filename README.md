@@ -1,13 +1,13 @@
 This library exposes two public functions that accept a [Google Analytics Core Reporting v4 response] string(https://developers.google.com/analytics/devguides/reporting/core/v4/samples) (string of the JSON data) and tranform the data into something easier to use.
 
-### `to_delimited`
+### `to_delimited(raw_report_response: &str, delimiter: &str) -> Result<Vec<String>, failure::Error>`
 Converts a report response to a collection of delimited (e.g. CSV) reports. You can specify any delimiter string you'd like.
 
 ```
 ["\"ga:deviceCategory\",\"ga:sessions\"\n\"desktop\",43\n\"mobile\",1\n"]
 ```
 
-### `to_flat_json`
+### `to_flat_json(raw_report: &str) -> Result<serde_json::value::Value, failure::Error>`
 Converts a report response to an array of "flat JSON" responses.
 
 ```json
