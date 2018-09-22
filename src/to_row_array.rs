@@ -1,5 +1,6 @@
-use serde_json::value::Value;
+use serde_json::value::{Number, Value};
 use serde_json::Map;
+use std::str::FromStr;
 use types::*;
 
 pub fn response_to_row_array(response: &ReportResponse) -> Value {
@@ -37,7 +38,10 @@ fn report_to_row_array(report: &Report) -> Value {
             }
 
             for (header, value) in metric_header_iter.clone().zip(row.metrics[0].values.iter()) {
-                current.insert(header.name.to_string(), Value::String(value.to_string()));
+                current.insert(
+                    header.name.to_string(),
+                    Value::Number(Number::from_str(value).unwrap()),
+                );
             }
 
             Value::Object(current)
@@ -66,7 +70,7 @@ mod tests {
 
         assert_eq!(
             response_to_row_array(&parsed_response),
-            json!([[{"ga:sessions": "44"}]])
+            json!([[{"ga:sessions": 44}]])
         )
     }
 
@@ -85,11 +89,11 @@ mod tests {
             json!([
                 [{
                     "ga:deviceCategory": "desktop",
-                    "ga:sessions": "43",
+                    "ga:sessions": 43,
                 },
                 {
                     "ga:deviceCategory": "mobile",
-                    "ga:sessions": "1",
+                    "ga:sessions": 1,
                 }]
             ])
         )
@@ -111,23 +115,23 @@ mod tests {
                 [{
                     "ga:deviceCategory": "desktop",
                     "ga:country": "Australia",
-                    "ga:sessions": "1",
-                    "ga:bounces": "1",
+                    "ga:sessions": 1,
+                    "ga:bounces": 1,
                 }, {
                     "ga:deviceCategory": "desktop",
                     "ga:country": "France",
-                    "ga:sessions": "39",
-                    "ga:bounces": "21",
+                    "ga:sessions": 39,
+                    "ga:bounces": 21,
                 }, {
                     "ga:deviceCategory": "desktop",
                     "ga:country": "United States",
-                    "ga:sessions": "3",
-                    "ga:bounces": "1",
+                    "ga:sessions": 3,
+                    "ga:bounces": 1,
                 }, {
                     "ga:deviceCategory": "mobile",
                     "ga:country": "Brazil",
-                    "ga:sessions": "1",
-                    "ga:bounces": "0",
+                    "ga:sessions": 1,
+                    "ga:bounces": 0,
                 }]
             ])
         )
@@ -161,33 +165,33 @@ mod tests {
             json!([
                 [{
                   "ga:deviceCategory": "desktop",
-                  "ga:sessions": "25",
-                  "ga:bounces": "17",
+                  "ga:sessions": 25,
+                  "ga:bounces": 17,
                 }, {
                   "ga:deviceCategory": "mobile",
-                  "ga:sessions": "2",
-                  "ga:bounces": "2",
+                  "ga:sessions": 2,
+                  "ga:bounces": 2,
                 }],
                 [{
                   "ga:country": "Azerbaijan",
-                  "ga:sessions": "1",
-                  "ga:bounces": "0",
+                  "ga:sessions": 1,
+                  "ga:bounces": 0,
                 }, {
                   "ga:country": "France",
-                  "ga:sessions": "18",
-                  "ga:bounces": "11",
+                  "ga:sessions": 18,
+                  "ga:bounces": 11,
                 }, {
                   "ga:country": "Japan",
-                  "ga:sessions": "4",
-                  "ga:bounces": "4",
+                  "ga:sessions": 4,
+                  "ga:bounces": 4,
                 }, {
                   "ga:country": "Switzerland",
-                  "ga:sessions": "1",
-                  "ga:bounces": "1",
+                  "ga:sessions": 1,
+                  "ga:bounces": 1,
                 }, {
                   "ga:country": "United States",
-                  "ga:sessions": "3",
-                  "ga:bounces": "3",
+                  "ga:sessions": 3,
+                  "ga:bounces": 3,
                 }]
             ])
         )
