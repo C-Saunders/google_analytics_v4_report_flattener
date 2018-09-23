@@ -196,4 +196,40 @@ mod tests {
             ])
         )
     }
+
+    #[test]
+    fn multiple_date_ranges() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/multiple_date_ranges.json"
+        ))).unwrap();
+
+        let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_row_array(&parsed_response),
+            json!([
+                [{
+                    "ga:browser": "Chrome",
+                    "ga:avgTimeOnPage": 108.1733,
+                    "ga:pageviewsPerSession": 2.93126,
+                    "ga:avgTimeOnPage2": 129.7071651,
+                    "ga:pageviewsPerSession2": 3.60975609,
+                }, {
+                    "ga:browser": "Edge",
+                    "ga:avgTimeOnPage": 51.794117,
+                    "ga:pageviewsPerSession": 6.6666667,
+                    "ga:avgTimeOnPage2": 210.866667,
+                    "ga:pageviewsPerSession2": 2.875,
+                }, {
+                    "ga:browser": "Firefox",
+                    "ga:avgTimeOnPage": 123.657142,
+                    "ga:pageviewsPerSession": 2.09375,
+                    "ga:avgTimeOnPage2": 75.333333,
+                    "ga:pageviewsPerSession2": 1.5,
+                }]
+            ])
+        )
+    }
 }
