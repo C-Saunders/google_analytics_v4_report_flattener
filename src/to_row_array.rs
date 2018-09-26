@@ -14,16 +14,14 @@ pub fn response_to_row_array(response: &ReportResponse) -> Value {
 
 fn report_to_row_array(report: &Report) -> Value {
     let report_rows = &report.data.rows;
-    if report_rows.is_none() {
+    if report_rows.is_empty() {
         return json!("[]");
     }
 
-    let dimension_headers = report.column_header.dimensions.as_ref();
+    let dimension_headers = &report.column_header.dimensions;
     let metric_header_iter = report.get_metric_header_iterator();
 
     let result = report_rows
-        .as_ref()
-        .unwrap()
         .iter()
         .map(|row| {
             let mut current: Map<String, Value> = Map::new();
@@ -40,17 +38,14 @@ fn report_to_row_array(report: &Report) -> Value {
 fn insert_dimension_data(
     current: &mut Map<String, Value>,
     row: &ReportRow,
-    dimension_headers: Option<&Vec<String>>,
+    dimension_headers: &Vec<String>,
 ) {
-    if dimension_headers.is_some() {
-        let dimension_data = row.dimensions.as_ref().unwrap();
-        for (i, header) in dimension_headers.unwrap().iter().enumerate() {
-            current.insert(
-                header.to_string(),
-                Value::String(dimension_data[i].to_string()),
-            );
-        }
-    }
+    for (i, header) in dimension_headers.iter().enumerate() {
+    current.insert(
+        header.to_string(),
+        Value::String(row.dimensions[i].to_string()),
+    );
+}
 }
 
 fn insert_metric_data(

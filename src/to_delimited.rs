@@ -10,10 +10,7 @@ pub fn response_to_delimited_reports(response: &ReportResponse, delimiter: &str)
 }
 
 fn report_to_flat(report: &Report, delimiter: &str) -> String {
-    let empty_vec = Vec::with_capacity(0);
     let dimension_header_iter = report.column_header.dimensions
-        .as_ref()
-        .unwrap_or(&empty_vec) // TODO: this is pretty ugly
         .iter()
         .map(|entry| format!("\"{}\"", entry));
 
@@ -32,13 +29,11 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
     report
         .data
         .rows
-        .as_ref()
-        .unwrap()
         .iter()
         .for_each(|report_row| {
-            if let Some(ref dimensions) = report_row.dimensions {
+            if !report_row.dimensions.is_empty() {
                 result.push_str(
-                    dimensions
+                    report_row.dimensions
                         .iter()
                         .map(|entry| format!("\"{}\"", entry))
                         .join_with(delimiter)
@@ -47,6 +42,7 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
                 );
                 result.push_str(delimiter);
             };
+
             let metric_data = report_row
                 .metrics
                 .iter()
