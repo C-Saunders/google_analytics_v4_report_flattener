@@ -16,7 +16,7 @@ pub struct Report {
 
 impl Report {
     pub fn is_empty(&self) -> bool {
-        self.data.rows.is_none()
+        self.data.rows.is_empty()
     }
 
     pub fn get_metric_header_iterator(&self) -> Iter<MetricHeaderEntry> {
@@ -30,7 +30,8 @@ impl Report {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ColumnHeader {
-    pub dimensions: Option<Vec<String>>,
+    #[serde(default)]
+    pub dimensions: Vec<String>,
     pub metric_header: MetricHeader,
 }
 
@@ -62,7 +63,8 @@ pub enum MetricType {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ReportData {
-    pub rows: Option<Vec<ReportRow>>,
+    #[serde(default)]
+    pub rows: Vec<ReportRow>,
     pub totals: Vec<DateRangeValue>,
     pub row_count: Option<u32>,
     pub minimums: Option<Vec<DateRangeValue>>,
@@ -74,7 +76,8 @@ pub struct ReportData {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ReportRow {
-    pub dimensions: Option<Vec<String>>,
+    #[serde(default)]
+    pub dimensions: Vec<String>,
     pub metrics: Vec<DateRangeValue>,
 }
 
