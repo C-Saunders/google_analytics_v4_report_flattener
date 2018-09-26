@@ -10,7 +10,9 @@ pub fn response_to_delimited_reports(response: &ReportResponse, delimiter: &str)
 }
 
 fn report_to_flat(report: &Report, delimiter: &str) -> String {
-    let dimension_header_iter = report.column_header.dimensions
+    let dimension_header_iter = report
+        .column_header
+        .dimensions
         .iter()
         .map(|entry| format!("\"{}\"", entry));
 
@@ -26,32 +28,29 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
             .to_string()
     );
 
-    report
-        .data
-        .rows
-        .iter()
-        .for_each(|report_row| {
-            if !report_row.dimensions.is_empty() {
-                result.push_str(
-                    report_row.dimensions
-                        .iter()
-                        .map(|entry| format!("\"{}\"", entry))
-                        .join_with(delimiter)
-                        .to_string()
-                        .as_str(),
-                );
-                result.push_str(delimiter);
-            };
+    report.data.rows.iter().for_each(|report_row| {
+        if !report_row.dimensions.is_empty() {
+            result.push_str(
+                report_row
+                    .dimensions
+                    .iter()
+                    .map(|entry| format!("\"{}\"", entry))
+                    .join_with(delimiter)
+                    .to_string()
+                    .as_str(),
+            );
+            result.push_str(delimiter);
+        };
 
-            let metric_data = report_row
-                .metrics
-                .iter()
-                .flat_map(|date_range_value| date_range_value.values.iter())
-                .join_with(delimiter)
-                .to_string();
+        let metric_data = report_row
+            .metrics
+            .iter()
+            .flat_map(|date_range_value| date_range_value.values.iter())
+            .join_with(delimiter)
+            .to_string();
 
-            result.push_str(format!("{}\n", metric_data).as_str());
-        });
+        result.push_str(format!("{}\n", metric_data).as_str());
+    });
 
     result
 }
