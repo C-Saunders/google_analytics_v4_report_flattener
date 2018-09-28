@@ -1,5 +1,6 @@
 use serde_json::value::{Number, Value};
 use serde_json::Map;
+use std::slice::Iter;
 use std::str::FromStr;
 use types::*;
 
@@ -18,30 +19,48 @@ fn report_to_row_array(report: &Report) -> Value {
     }
 
     let dimension_headers = &report.column_header.dimensions;
-    let metric_header_iter = report.get_metric_header_iterator();
+    let metric_headers = report.get_metric_headers();
 
     let result = report_rows
         .iter()
         .map(|row| {
             let mut current: Map<String, Value> = Map::new();
-            for (i, header) in dimension_headers.iter().enumerate() {
-                current.insert(
-                    header.to_string(),
-                    Value::String(row.dimensions[i].to_string()),
-                );
-            }
 
-            for (header, value) in metric_header_iter.clone().zip(row.metrics[0].values.iter()) {
-                current.insert(
-                    header.name.to_string(),
-                    Value::Number(Number::from_str(value).unwrap()),
-                );
-            }
+            insert_dimension_data(&mut current, row, dimension_headers);
+            insert_metric_data(&mut current, row, &metric_headers.iter());
 
             Value::Object(current)
         }).collect();
 
     Value::Array(result)
+}
+
+fn insert_dimension_data(
+    current: &mut Map<String, Value>,
+    row: &ReportRow,
+    dimension_headers: &[String],
+) {
+    for (i, header) in dimension_headers.iter().enumerate() {
+        current.insert(
+            header.to_string(),
+            Value::String(row.dimensions[i].to_string()),
+        );
+    }
+}
+
+fn insert_metric_data(
+    current: &mut Map<String, Value>,
+    row: &ReportRow,
+    metric_header_iter: &Iter<MetricHeaderEntry>,
+) {
+    let value_iterator = row.flat_value_iterator();
+
+    for (header, value) in metric_header_iter.clone().zip(value_iterator) {
+        current.insert(
+            header.name.clone(),
+            Value::Number(Number::from_str(value).unwrap()),
+        );
+    }
 }
 
 #[cfg(test)]
@@ -186,6 +205,42 @@ mod tests {
                   "ga:country": "United States",
                   "ga:sessions": 3,
                   "ga:bounces": 3,
+                }]
+            ])
+        )
+    }
+
+    #[test]
+    fn multiple_date_ranges() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/multiple_date_ranges.json"
+        ))).unwrap();
+
+        let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_row_array(&parsed_response),
+            json!([
+                [{
+                    "ga:browser": "Chrome",
+                    "ga:avgTimeOnPage": 108.1733,
+                    "ga:pageviewsPerSession": 2.93126,
+                    "ga:avgTimeOnPage_2": 129.7071651,
+                    "ga:pageviewsPerSession_2": 3.60975609,
+                }, {
+                    "ga:browser": "Edge",
+                    "ga:avgTimeOnPage": 51.794117,
+                    "ga:pageviewsPerSession": 6.6666667,
+                    "ga:avgTimeOnPage_2": 210.866667,
+                    "ga:pageviewsPerSession_2": 2.875,
+                }, {
+                    "ga:browser": "Firefox",
+                    "ga:avgTimeOnPage": 123.657142,
+                    "ga:pageviewsPerSession": 2.09375,
+                    "ga:avgTimeOnPage_2": 75.333333,
+                    "ga:pageviewsPerSession_2": 1.5,
                 }]
             ])
         )

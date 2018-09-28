@@ -1,0 +1,128 @@
+{
+  "reports": [
+    {
+      "columnHeader": {
+        "dimensions": [
+          "ga:browser"
+        ],
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:avgTimeOnPage",
+              "type": "TIME"
+            },
+            {
+              "name": "ga:pageviewsPerSession",
+              "type": "FLOAT"
+            }
+          ]
+        }
+      },
+      "data": {
+        "rows": [
+          {
+            "dimensions": [
+              "Chrome"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "108.1733",
+                  "2.93126"
+                ]
+              },
+              {
+                "values": [
+                  "129.7071651",
+                  "3.60975609"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Edge"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "51.794117",
+                  "6.6666667"
+                ]
+              },
+              {
+                "values": [
+                  "210.866667",
+                  "2.875"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Firefox"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "123.657142",
+                  "2.09375"
+                ]
+              },
+              {
+                "values": [
+                  "75.333333",
+                  "1.5"
+                ]
+              }
+            ]
+          }
+        ],
+        "totals": [
+          {
+            "values": [
+              "89.31735436893204",
+              "3.4342688330871494"
+            ]
+          },
+          {
+            "values": [
+              "155.70253164556962",
+              "3.0343347639484977"
+            ]
+          }
+        ],
+        "rowCount": 3,
+        "minimums": [
+          {
+            "values": [
+              "0.0",
+              "0.0"
+            ]
+          },
+          {
+            "values": [
+              "0.0",
+              "0.0"
+            ]
+          }
+        ],
+        "maximums": [
+          {
+            "values": [
+              "364.8",
+              "6.666666666666667"
+            ]
+          },
+          {
+            "values": [
+              "267.4",
+              "5.4"
+            ]
+          }
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}

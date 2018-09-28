@@ -1,4 +1,4 @@
-use joinery::Joinable;
+use itertools::Itertools;
 use types::*;
 
 pub fn response_to_delimited_reports(response: &ReportResponse, delimiter: &str) -> Vec<String> {
@@ -16,15 +16,17 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
         .iter()
         .map(|entry| format!("\"{}\"", entry));
 
-    let metric_header_iter = report
-        .get_metric_header_iterator()
-        .map(|entry: &MetricHeaderEntry| format!("\"{}\"", &entry.name));
+    let metric_headers = report.get_metric_headers();
+
+    let metric_header_iter = metric_headers
+        .iter()
+        .map(|entry: &MetricHeaderEntry| format!("\"{}\"", entry.name));
 
     let mut result = format!(
         "{}\n",
         dimension_header_iter
             .chain(metric_header_iter)
-            .join_with(delimiter)
+            .join(delimiter)
             .to_string()
     );
 
@@ -35,19 +37,14 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
                     .dimensions
                     .iter()
                     .map(|entry| format!("\"{}\"", entry))
-                    .join_with(delimiter)
+                    .join(delimiter)
                     .to_string()
                     .as_str(),
             );
             result.push_str(delimiter);
         };
 
-        let metric_data = report_row
-            .metrics
-            .iter()
-            .flat_map(|date_range_value| date_range_value.values.iter())
-            .join_with(delimiter)
-            .to_string();
+        let metric_data = report_row.flat_value_iterator().join(delimiter).to_string();
 
         result.push_str(format!("{}\n", metric_data).as_str());
     });
@@ -151,18 +148,42 @@ mod tests {
             vec![
                 indoc!(
                     r#""ga:deviceCategory","ga:sessions","ga:bounces"
-                "desktop",25,17
-                "mobile",2,2
-                "#
+                    "desktop",25,17
+                    "mobile",2,2
+                    "#
                 ).to_string(),
                 indoc!(
                     r#""ga:country","ga:sessions","ga:bounces"
-                "Azerbaijan",1,0
-                "France",18,11
-                "Japan",4,4
-                "Switzerland",1,1
-                "United States",3,3
-                "#
+                    "Azerbaijan",1,0
+                    "France",18,11
+                    "Japan",4,4
+                    "Switzerland",1,1
+                    "United States",3,3
+                    "#
+                ).to_string(),
+            ]
+        )
+    }
+
+    #[test]
+    fn multiple_date_ranges() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/multiple_date_ranges.json"
+        ))).unwrap();
+
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_delimited_reports(&deserialized_response, ","),
+            vec![
+                indoc!(
+                    r#""ga:browser","ga:avgTimeOnPage","ga:pageviewsPerSession","ga:avgTimeOnPage_2","ga:pageviewsPerSession_2"
+                    "Chrome",108.1733,2.93126,129.7071651,3.60975609
+                    "Edge",51.794117,6.6666667,210.866667,2.875
+                    "Firefox",123.657142,2.09375,75.333333,1.5
+                    "#
                 ).to_string(),
             ]
         )
