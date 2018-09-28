@@ -1,5 +1,5 @@
 extern crate failure;
-extern crate joinery;
+extern crate itertools;
 extern crate serde;
 
 #[cfg(test)]

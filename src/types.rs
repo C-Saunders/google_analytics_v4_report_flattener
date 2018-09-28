@@ -100,6 +100,14 @@ pub struct ReportRow {
     pub metrics: Vec<DateRangeValue>,
 }
 
+impl ReportRow {
+    pub fn flat_value_iterator<'a>(&'a self) -> impl Iterator<Item = &String> {
+        self.metrics
+            .iter()
+            .flat_map(|value: &'a DateRangeValue| value.values.iter())
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct DateRangeValue {
     pub values: Vec<String>,

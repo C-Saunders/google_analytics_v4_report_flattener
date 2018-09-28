@@ -53,10 +53,7 @@ fn insert_metric_data(
     row: &ReportRow,
     metric_header_iter: &Iter<MetricHeaderEntry>,
 ) {
-    let value_iterator = row
-        .metrics
-        .iter()
-        .flat_map(|value: &DateRangeValue| value.values.iter());
+    let value_iterator = row.flat_value_iterator();
 
     for (header, value) in metric_header_iter.clone().zip(value_iterator) {
         current.insert(

@@ -1,4 +1,4 @@
-use joinery::Joinable;
+use itertools::Itertools;
 use types::*;
 
 pub fn response_to_delimited_reports(response: &ReportResponse, delimiter: &str) -> Vec<String> {
@@ -26,7 +26,7 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
         "{}\n",
         dimension_header_iter
             .chain(metric_header_iter)
-            .join_with(delimiter)
+            .join(delimiter)
             .to_string()
     );
 
@@ -37,19 +37,14 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
                     .dimensions
                     .iter()
                     .map(|entry| format!("\"{}\"", entry))
-                    .join_with(delimiter)
+                    .join(delimiter)
                     .to_string()
                     .as_str(),
             );
             result.push_str(delimiter);
         };
 
-        let metric_data = report_row
-            .metrics
-            .iter()
-            .flat_map(|date_range_value| date_range_value.values.iter())
-            .join_with(delimiter)
-            .to_string();
+        let metric_data = report_row.flat_value_iterator().join(delimiter).to_string();
 
         result.push_str(format!("{}\n", metric_data).as_str());
     });
