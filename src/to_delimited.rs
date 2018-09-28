@@ -16,9 +16,11 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
         .iter()
         .map(|entry| format!("\"{}\"", entry));
 
-    let metric_header_iter = report
-        .get_metric_header_iterator()
-        .map(|entry: &MetricHeaderEntry| format!("\"{}\"", &entry.name));
+    let metric_headers = report.get_metric_headers();
+
+    let metric_header_iter = metric_headers
+        .iter()
+        .map(|entry: &MetricHeaderEntry| format!("\"{}\"", entry.name));
 
     let mut result = format!(
         "{}\n",

@@ -1,5 +1,3 @@
-use std::slice::Iter;
-
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct ReportResponse {
@@ -19,11 +17,32 @@ impl Report {
         self.data.rows.is_empty()
     }
 
-    pub fn get_metric_header_iterator(&self) -> Iter<MetricHeaderEntry> {
-        self.column_header
-            .metric_header
-            .metric_header_entries
-            .iter()
+    // we want sets of headers like x, y, x_2, y_2, ..., x_n, y_n
+    // to match the shape of the data
+    pub fn get_metric_headers(&self) -> Vec<MetricHeaderEntry> {
+        let base_items = &self.column_header.metric_header.metric_header_entries;
+
+        let mut result = base_items.clone();
+
+        for date_range_num in 1..self.number_of_date_ranges() {
+            for entry in base_items.iter() {
+                let temp_entry = MetricHeaderEntry {
+                    name: format!("{}_{}", &entry.name, date_range_num + 1),
+                    metric_type: (*entry).metric_type.clone(),
+                };
+                result.push(temp_entry);
+            }
+        }
+
+        result
+    }
+
+    fn number_of_date_ranges(&self) -> usize {
+        if self.is_empty() {
+            0
+        } else {
+            self.data.rows[0].metrics.len()
+        }
     }
 }
 
@@ -42,14 +61,14 @@ pub struct MetricHeader {
     // pivotHeaders: Vec<PivotHeader>
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MetricHeaderEntry {
     pub name: String,
     #[serde(rename = "type")]
     pub metric_type: MetricType,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MetricType {
     MetricTypeUnspecified,

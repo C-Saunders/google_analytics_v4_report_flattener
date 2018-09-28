@@ -19,7 +19,7 @@ fn report_to_row_array(report: &Report) -> Value {
     }
 
     let dimension_headers = &report.column_header.dimensions;
-    let metric_header_iter = report.get_metric_header_iterator();
+    let metric_headers = report.get_metric_headers();
 
     let result = report_rows
         .iter()
@@ -27,7 +27,7 @@ fn report_to_row_array(report: &Report) -> Value {
             let mut current: Map<String, Value> = Map::new();
 
             insert_dimension_data(&mut current, row, dimension_headers);
-            insert_metric_data(&mut current, row, &metric_header_iter);
+            insert_metric_data(&mut current, row, &metric_headers.iter());
 
             Value::Object(current)
         }).collect();
@@ -38,14 +38,14 @@ fn report_to_row_array(report: &Report) -> Value {
 fn insert_dimension_data(
     current: &mut Map<String, Value>,
     row: &ReportRow,
-    dimension_headers: &Vec<String>,
+    dimension_headers: &[String],
 ) {
     for (i, header) in dimension_headers.iter().enumerate() {
-    current.insert(
-        header.to_string(),
-        Value::String(row.dimensions[i].to_string()),
-    );
-}
+        current.insert(
+            header.to_string(),
+            Value::String(row.dimensions[i].to_string()),
+        );
+    }
 }
 
 fn insert_metric_data(
@@ -53,25 +53,17 @@ fn insert_metric_data(
     row: &ReportRow,
     metric_header_iter: &Iter<MetricHeaderEntry>,
 ) {
-    for (date_range_value_index, date_range_value) in row.metrics.iter().enumerate() {
-        for (header, value) in metric_header_iter
-            .clone()
-            .zip(date_range_value.values.iter())
-        {
-            current.insert(
-                get_metric_label(header, date_range_value_index),
-                Value::Number(Number::from_str(value).unwrap()),
-            );
-        }
-    }
-}
+    let value_iterator = row
+        .metrics
+        .iter()
+        .flat_map(|value: &DateRangeValue| value.values.iter());
 
-fn get_metric_label(header: &MetricHeaderEntry, index: usize) -> String {
-    if index == 0 {
-        return header.name.to_string();
+    for (header, value) in metric_header_iter.clone().zip(value_iterator) {
+        current.insert(
+            header.name.clone(),
+            Value::Number(Number::from_str(value).unwrap()),
+        );
     }
-
-    return format!("{}_{}", header.name, index + 1);
 }
 
 #[cfg(test)]
