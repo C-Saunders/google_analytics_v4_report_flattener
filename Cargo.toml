@@ -5,6 +5,7 @@ authors = ["Charlie Saunders <charlieasaunders@gmail.com>"]
 description = "Converts Google Analytics API v4 reports to flat/delimited data."
 repository = "https://github.com/C-Saunders/google_analytics_v4_report_flattener"
 license = "MIT"
+exclude = ["test_reports/*", "benches/*"]
 
 [dependencies]
 itertools = "0.7.8"
