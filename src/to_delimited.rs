@@ -61,6 +61,22 @@ mod tests {
     use types::ReportResponse;
 
     #[test]
+    fn no_rows() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/no_rows.json"
+        ))).unwrap();
+
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_delimited_reports(&deserialized_response, ","),
+            vec!["\"ga:deviceCategory\",\"ga:sessions\"\n"]
+        )
+    }
+
+    #[test]
     fn no_dimensions() {
         let data: String = fs::read_to_string(PathBuf::from(format!(
             "{}{}",
