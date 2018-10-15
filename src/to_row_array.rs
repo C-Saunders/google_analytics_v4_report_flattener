@@ -15,7 +15,7 @@ pub fn response_to_row_array(response: &ReportResponse) -> Value {
 fn report_to_row_array(report: &Report) -> Value {
     let report_rows = &report.data.rows;
     if report_rows.is_empty() {
-        return json!("[]");
+        return json!([]);
     }
 
     let dimension_headers = &report.column_header.dimensions;
@@ -70,6 +70,19 @@ mod tests {
     use std::fs;
     use std::path::PathBuf;
     use types::ReportResponse;
+
+    #[test]
+    fn no_rows() {
+        let data: String = fs::read_to_string(PathBuf::from(format!(
+            "{}{}",
+            env!("CARGO_MANIFEST_DIR"),
+            "/test_reports/no_rows.json"
+        ))).unwrap();
+
+        let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(response_to_row_array(&parsed_response), json!([[]]))
+    }
 
     #[test]
     fn no_dimensions() {
