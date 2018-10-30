@@ -1,6 +1,6 @@
 [package]
 name = "ga-v4-flattener"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Charlie Saunders <charlieasaunders@gmail.com>"]
 description = "Converts Google Analytics API v4 reports to flat/delimited data."
 repository = "https://github.com/C-Saunders/google_analytics_v4_report_flattener"
@@ -9,7 +9,6 @@ exclude = ["test_reports/*", "benches/*"]
 
 [dependencies]
 itertools = "0.7.8"
-failure = "0.1.2"
 serde = "1.0"
 serde_json = "1.0"
 serde_derive = "1.0"
