@@ -2,7 +2,7 @@ This library exposes two public functions that accept a [Google Analytics Core R
 
 ### Report to delimited (e.g. TSV, CSV)
 
-`to_delimited(raw_report_response: &str, delimiter: &str) -> Result<Vec<String>, failure::Error>`
+`to_delimited(raw_report_response: &str, delimiter: &str) -> Result<Vec<String>, serde_json::Error>`
 
 Converts a report response to a collection of delimited reports. You can specify any delimiter string you'd like.
 
@@ -12,7 +12,7 @@ Converts a report response to a collection of delimited reports. You can specify
 
 ### Report to flat JSON (flat array of row data)
 
-`to_flat_json(raw_report: &str) -> Result<serde_json::value::Value, failure::Error>`
+`to_flat_json(raw_report: &str) -> Result<serde_json::value::Value, serde_json::Error>`
 
 Converts a report response to an array of "flat JSON" responses.
 

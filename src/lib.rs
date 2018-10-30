@@ -1,4 +1,3 @@
-extern crate failure;
 extern crate itertools;
 extern crate serde;
 
@@ -14,8 +13,8 @@ mod to_delimited;
 mod to_row_array;
 pub mod types;
 
-use failure::Error;
 use serde_json::value::Value;
+use serde_json::Error;
 use to_delimited::response_to_delimited_reports;
 use to_row_array::response_to_row_array;
 use types::ReportResponse;
