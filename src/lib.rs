@@ -13,11 +13,11 @@ mod to_delimited;
 mod to_row_array;
 pub mod types;
 
+use crate::to_delimited::response_to_delimited_reports;
+use crate::to_row_array::response_to_row_array;
+use crate::types::ReportResponse;
 use serde_json::value::Value;
 use serde_json::Error;
-use to_delimited::response_to_delimited_reports;
-use to_row_array::response_to_row_array;
-use types::ReportResponse;
 
 pub fn to_delimited(raw_report_response: &str, delimiter: &str) -> Result<Vec<String>, Error> {
     if raw_report_response.is_empty() {
