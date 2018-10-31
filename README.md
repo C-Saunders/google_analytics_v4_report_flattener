@@ -45,5 +45,7 @@ Issues and pull requests welcome. Please be nice.
 * Run benchmarks with `cargo bench`
 * Format with `rustfmt`
 
+As of October 30, 2018, this project uses the 2018 edition of Rust. You may need to install the beta with `rustup install beta` and use `cargo +beta` for the above commands.
+
 ## License
 [MIT](https://opensource.org/licenses/MIT)

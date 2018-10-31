@@ -1,5 +1,5 @@
+use crate::types::*;
 use itertools::Itertools;
-use types::*;
 
 pub fn response_to_delimited_reports(response: &ReportResponse, delimiter: &str) -> Vec<String> {
     response
@@ -55,10 +55,10 @@ fn report_to_flat(report: &Report, delimiter: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::types::ReportResponse;
     use serde_json;
     use std::fs;
     use std::path::PathBuf;
-    use types::ReportResponse;
 
     #[test]
     fn no_rows() {

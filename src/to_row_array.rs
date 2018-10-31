@@ -1,8 +1,8 @@
+use crate::types::*;
 use serde_json::value::{Number, Value};
 use serde_json::Map;
 use std::slice::Iter;
 use std::str::FromStr;
-use types::*;
 
 pub fn response_to_row_array(response: &ReportResponse) -> Value {
     response
@@ -66,10 +66,10 @@ fn insert_metric_data(
 #[cfg(test)]
 mod tests {
     use super::response_to_row_array;
+    use crate::types::ReportResponse;
     use serde_json;
     use std::fs;
     use std::path::PathBuf;
-    use types::ReportResponse;
 
     #[test]
     fn no_rows() {
