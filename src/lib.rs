@@ -54,7 +54,8 @@ mod tests {
             "{}{}",
             env!("CARGO_MANIFEST_DIR"),
             "/test_reports/unsupported_feature.json"
-        ))).unwrap();
+        )))
+        .unwrap();
 
         assert!(to_delimited(&data, ",").is_err())
     }
