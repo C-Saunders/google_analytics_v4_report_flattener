@@ -30,7 +30,8 @@ fn report_to_row_array(report: &Report) -> Value {
             insert_metric_data(&mut current, row, &metric_headers.iter());
 
             Value::Object(current)
-        }).collect();
+        })
+        .collect();
 
     Value::Array(result)
 }
@@ -69,15 +70,14 @@ mod tests {
     use crate::types::ReportResponse;
     use serde_json;
     use std::fs;
-    use std::path::PathBuf;
+    use std::path::Path;
 
     #[test]
     fn no_rows() {
-        let data: String = fs::read_to_string(PathBuf::from(format!(
-            "{}{}",
-            env!("CARGO_MANIFEST_DIR"),
-            "/test_reports/no_rows.json"
-        ))).unwrap();
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("test_reports/no_rows.json"),
+        )
+        .unwrap();
 
         let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
@@ -86,11 +86,10 @@ mod tests {
 
     #[test]
     fn no_dimensions() {
-        let data: String = fs::read_to_string(PathBuf::from(format!(
-            "{}{}",
-            env!("CARGO_MANIFEST_DIR"),
-            "/test_reports/no_dimensions.json"
-        ))).unwrap();
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("test_reports/no_dimensions.json"),
+        )
+        .unwrap();
 
         let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
@@ -102,11 +101,11 @@ mod tests {
 
     #[test]
     fn single_dimension_and_metric() {
-        let data: String = fs::read_to_string(PathBuf::from(format!(
-            "{}{}",
-            env!("CARGO_MANIFEST_DIR"),
-            "/test_reports/single_dimension_and_metric.json"
-        ))).unwrap();
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("test_reports/single_dimension_and_metric.json"),
+        )
+        .unwrap();
 
         let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
@@ -127,11 +126,11 @@ mod tests {
 
     #[test]
     fn multiple_dimensions_and_metrics() {
-        let data: String = fs::read_to_string(PathBuf::from(format!(
-            "{}{}",
-            env!("CARGO_MANIFEST_DIR"),
-            "/test_reports/multiple_dimensions_and_metrics.json"
-        ))).unwrap();
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR"))
+                .join("test_reports/multiple_dimensions_and_metrics.json"),
+        )
+        .unwrap();
 
         let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
@@ -165,11 +164,10 @@ mod tests {
 
     #[test]
     fn large_report() {
-        let data: String = fs::read_to_string(PathBuf::from(format!(
-            "{}{}",
-            env!("CARGO_MANIFEST_DIR"),
-            "/test_reports/large_report.json"
-        ))).unwrap();
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("test_reports/large_report.json"),
+        )
+        .unwrap();
 
         let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
@@ -178,11 +176,10 @@ mod tests {
 
     #[test]
     fn multiple_reports() {
-        let data: String = fs::read_to_string(PathBuf::from(format!(
-            "{}{}",
-            env!("CARGO_MANIFEST_DIR"),
-            "/test_reports/multiple_reports.json"
-        ))).unwrap();
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("test_reports/multiple_reports.json"),
+        )
+        .unwrap();
 
         let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
@@ -225,11 +222,10 @@ mod tests {
 
     #[test]
     fn multiple_date_ranges() {
-        let data: String = fs::read_to_string(PathBuf::from(format!(
-            "{}{}",
-            env!("CARGO_MANIFEST_DIR"),
-            "/test_reports/multiple_date_ranges.json"
-        ))).unwrap();
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("test_reports/multiple_date_ranges.json"),
+        )
+        .unwrap();
 
         let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
 
