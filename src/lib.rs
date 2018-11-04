@@ -9,8 +9,8 @@ extern crate serde_derive;
 #[macro_use]
 extern crate serde_json;
 
-mod to_delimited;
-mod to_row_array;
+pub mod to_delimited;
+pub mod to_row_array;
 pub mod types;
 
 use crate::to_delimited::response_to_delimited_reports;
