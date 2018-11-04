@@ -202,7 +202,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "ga-v4-flattener"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "criterion 0.2.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "indoc 0.2.6 (registry+https://github.com/rust-lang/crates.io-index)",
