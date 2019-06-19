@@ -203,4 +203,29 @@ mod tests {
             ]
         )
     }
+
+    #[test]
+    fn includes_segment_as_a_dimension() {
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("test_reports/including_segment.json"),
+        )
+        .unwrap();
+
+        let deserialized_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_delimited_reports(&deserialized_response, ","),
+            vec![indoc!(
+                r#""ga:browser","ga:segment","ga:sessions"
+                    "Android Webview","Returning Users",1
+                    "Chrome","Returning Users",62
+                    "Edge","Returning Users",1
+                    "Firefox","Returning Users",2
+                    "Internet Explorer","Returning Users",1
+                    "Safari","Returning Users",17
+                    "#
+            )
+            .to_string()]
+        )
+    }
 }

@@ -254,4 +254,50 @@ mod tests {
             ])
         )
     }
+
+    #[test]
+    fn includes_segment_as_a_dimension() {
+        let data: String = fs::read_to_string(
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("test_reports/including_segment.json"),
+        )
+        .unwrap();
+
+        let parsed_response: ReportResponse = serde_json::from_str(data.as_str()).unwrap();
+
+        assert_eq!(
+            response_to_row_array(&parsed_response),
+            json!([
+                [{
+                    "ga:browser": "Android Webview",
+                    "ga:segment": "Returning Users",
+                    "ga:sessions": 1,
+                },
+                {
+                    "ga:browser": "Chrome",
+                    "ga:segment": "Returning Users",
+                    "ga:sessions": 62,
+                },
+                {
+                    "ga:browser": "Edge",
+                    "ga:segment": "Returning Users",
+                    "ga:sessions": 1,
+                },
+                {
+                    "ga:browser": "Firefox",
+                    "ga:segment": "Returning Users",
+                    "ga:sessions": 2,
+                },
+                {
+                    "ga:browser": "Internet Explorer",
+                    "ga:segment": "Returning Users",
+                    "ga:sessions": 1,
+                },
+                {
+                    "ga:browser": "Safari",
+                    "ga:segment": "Returning Users",
+                    "ga:sessions": 17,
+                }]
+            ])
+        )
+    }
 }

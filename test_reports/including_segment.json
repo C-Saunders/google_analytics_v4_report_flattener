@@ -1,0 +1,125 @@
+{
+  "reports": [
+    {
+      "columnHeader": {
+        "dimensions": [
+          "ga:browser",
+          "ga:segment"
+        ],
+        "metricHeader": {
+          "metricHeaderEntries": [
+            {
+              "name": "ga:sessions",
+              "type": "INTEGER"
+            }
+          ]
+        }
+      },
+      "data": {
+        "rows": [
+          {
+            "dimensions": [
+              "Android Webview",
+              "Returning Users"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Chrome",
+              "Returning Users"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "62"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Edge",
+              "Returning Users"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Firefox",
+              "Returning Users"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "2"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Internet Explorer",
+              "Returning Users"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "1"
+                ]
+              }
+            ]
+          },
+          {
+            "dimensions": [
+              "Safari",
+              "Returning Users"
+            ],
+            "metrics": [
+              {
+                "values": [
+                  "17"
+                ]
+              }
+            ]
+          }
+        ],
+        "totals": [
+          {
+            "values": [
+              "84"
+            ]
+          }
+        ],
+        "rowCount": 6,
+        "minimums": [
+          {
+            "values": [
+              "1"
+            ]
+          }
+        ],
+        "maximums": [
+          {
+            "values": [
+              "62"
+            ]
+          }
+        ],
+        "isDataGolden": true
+      }
+    }
+  ]
+}
