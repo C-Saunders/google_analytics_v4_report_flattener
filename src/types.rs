@@ -90,7 +90,7 @@ pub struct ReportData {
     pub maximums: Option<Vec<DateRangeValue>>,
     pub samples_read_counts: Option<Vec<String>>,
     pub sampling_space_sizes: Option<Vec<String>>,
-    pub is_data_golden: bool,
+    pub is_data_golden: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
