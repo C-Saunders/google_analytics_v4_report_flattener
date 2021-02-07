@@ -1,4 +1,4 @@
-This library exposes two public functions that accept a [Google Analytics Core Reporting v4 response string](https://developers.google.com/analytics/devguides/reporting/core/v4/samples) (string of the JSON data) and tranform the data into something easier to use.
+This library exposes two public functions that accept a [Google Analytics Core Reporting v4 response string](https://developers.google.com/analytics/devguides/reporting/core/v4/samples) (string of the JSON data) and transform the data into something easier to use.
 
 ### Report to delimited (e.g. TSV, CSV)
 
@@ -44,8 +44,6 @@ Issues and pull requests welcome. Please be nice.
 * Run tests with `cargo test`
 * Run benchmarks with `cargo bench`
 * Format with `rustfmt`
-
-As of October 30, 2018, this project uses the 2018 edition of Rust. You may need to install the beta with `rustup install beta` and use `cargo +beta` for the above commands.
 
 ## License
 [MIT](https://opensource.org/licenses/MIT)
