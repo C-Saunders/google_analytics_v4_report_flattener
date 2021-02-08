@@ -20,8 +20,10 @@ indoc = "0.2"
 
 [[bench]]
 name = "to_delimited"
+path = "benches/to_delimited.rs"
 harness = false
 
 [[bench]]
 name = "to_row_array"
+path = "benches/to_row_array.rs"
 harness = false
